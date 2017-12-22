@@ -9,6 +9,7 @@ import aiohttp
 
 class Session(object):
     """属于同一个Session的请求共享一组连接池，如有可能也会重用HTTP连接。"""
+
     def __init__(self, loop=None):
         self._loop = loop or asyncio.get_event_loop()
 
@@ -20,14 +21,26 @@ class Session(object):
             loop=self._loop)
 
     async def do_request(self, req, timeout=300):
-        print('###$', req.method, req.url)
-        print(req.headers)
         resp = await self._aio_session.request(req.method, url=req.url,
                                                data=req.data,
                                                params=req.params,
                                                headers=req.headers,
                                                timeout=timeout)
         return resp
+
+    async def __aenter__(self):
+        await self._aio_session.__aenter__()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self._aio_session.__aexit__(exc_type, exc_val, exc_tb)
+
+    def close(self):
+        """Close all http connections. This is coroutine, and should be
+        awaited. Method will be coroutine (instead returning Future) once
+        aiohttp does that.
+        """
+        return self._endpoint._aio_session.close()
 
 
 class Request(object):

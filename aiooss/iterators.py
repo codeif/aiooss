@@ -36,7 +36,7 @@ class _BaseIterator(object):
             if not self.is_truncated:
                 raise StopAsyncIteration
 
-            self.fetch_with_retry()
+            await self.fetch_with_retry()
 
     async def fetch_with_retry(self):
         for i in range(self.max_retries):

@@ -26,30 +26,30 @@ Getting started
     endpoint = 'http://oss-cn-hangzhou.aliyuncs.com' # Suppose that your bucket is in the Hangzhou region.
 
     auth = aiooss.Auth('<Your AccessKeyID>', '<Your AccessKeySecret>')
-    bucket = aiooss.Bucket(auth, endpoint, '<your bucket name>')
 
     async def go(loop):
         # The object key in the bucket is story.txt
-        key = 'story.txt'
+        async with aiooss.Bucket(auth, endpoint, '<your bucket name>') as bucket:
+            key = 'story.txt'
 
-        # Upload
-        await bucket.put_object(key, 'Ali Baba is a happy youth.')
-        
-        # Upload
-        data = dict(a=1, b=2)
-        await bucket.put_object(key, json.dumps(data), headers={'Content-Type': 'application/json'})
+            # Upload
+            await bucket.put_object(key, 'Ali Baba is a happy youth.')
+            
+            # Upload
+            data = dict(a=1, b=2)
+            await bucket.put_object(key, json.dumps(data), headers={'Content-Type': 'application/json'})
 
-        # Download
-        result = await bucket.get_object(key)
-        print(result.headers)
-        print(await result.resp.read())
+            # Download
+            result = await bucket.get_object(key)
+            print(result.headers)
+            print(await result.resp.read())
 
-        # Delete
-        await bucket.delete_object(key)
+            # Delete
+            await bucket.delete_object(key)
 
-        # Traverse all objects in the bucket
-        async for object_info in aiooss.ObjectIterator(bucket):
-            print(object_info.key)
+            # Traverse all objects in the bucket
+            async for object_info in aiooss.ObjectIterator(bucket):
+                print(object_info.key)
 
     loop = asyncio.get_event_loop()
     loop.run_until_complete(go(loop))

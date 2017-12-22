@@ -36,6 +36,20 @@ class _Base(object):
         parse_func(result, body)
         return result
 
+    async def __aenter__(self):
+        await self.session._aio_session.__aenter__()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.session._aio_session.__aexit__(exc_type, exc_val, exc_tb)
+
+    def close(self):
+        """Close all http connections. This is coroutine, and should be
+        awaited. Method will be coroutine (instead returning Future) once
+        aiohttp does that.
+        """
+        return self.session._endpoint._aio_session.close()
+
 
 class Service(_Base):
     def __init__(self, auth, endpoint,
