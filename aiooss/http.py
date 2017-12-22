@@ -35,12 +35,8 @@ class Session(object):
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self._aio_session.__aexit__(exc_type, exc_val, exc_tb)
 
-    def close(self):
-        """Close all http connections. This is coroutine, and should be
-        awaited. Method will be coroutine (instead returning Future) once
-        aiohttp does that.
-        """
-        return self._endpoint._aio_session.close()
+    async def close(self):
+        await self._aio_session.close()
 
 
 class Request(object):

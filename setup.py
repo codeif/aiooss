@@ -6,7 +6,7 @@ with open('README.rst') as f:
 
 setup(
     name='aiooss',
-    version='0.1.1',
+    version='0.1.2',
     description='A async aliyun OSS library.',
     long_description=readme,
     author='codeif',
