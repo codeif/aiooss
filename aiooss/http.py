@@ -61,6 +61,6 @@ class Request(object):
 
         if 'User-Agent' not in self.headers:
             if app_name:
-                self.headers['User-Agent'] = http._USER_AGENT + '/' + app_name
+                self.headers['User-Agent'] = http.USER_AGENT + '/' + app_name
             else:
-                self.headers['User-Agent'] = http._USER_AGENT
+                self.headers['User-Agent'] = http.USER_AGENT
